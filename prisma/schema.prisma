@@ -1,0 +1,59 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Location {
+  id                Int                @id @default(autoincrement())
+  name              String
+  slug              String             @unique
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+  overviewInfoTexts OverviewInfoText[]
+  rooms             Room[]
+}
+
+model Room {
+  id         Int       @id @default(autoincrement())
+  locationId Int
+  name       String
+  slug       String    @unique
+  calendarId String
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  bookings   Booking[]
+  location   Location  @relation(fields: [locationId], references: [id])
+
+  @@index([locationId], map: "Room_locationId_fkey")
+}
+
+model Booking {
+  id          Int      @id @default(autoincrement())
+  roomId      Int
+  description String
+  from        DateTime
+  to          DateTime
+  eventId     String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  room        Room     @relation(fields: [roomId], references: [id])
+
+  @@index([roomId], map: "Booking_roomId_fkey")
+}
+
+model OverviewInfoText {
+  id          Int      @id @default(autoincrement())
+  locationId  Int
+  title       String
+  description String
+  image       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  location    Location @relation(fields: [locationId], references: [id])
+
+  @@index([locationId], map: "OverviewInfoText_locationId_fkey")
+}
