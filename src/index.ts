@@ -12,6 +12,9 @@ const port = process.env.PORT ? Number(process.env.PORT) : 3000;
 const app = express();
 app.use(cors());
 app.use(express.json());
+app.get("/health-check", (req, res) => {
+  res.send({ message: "Hello from the API" });
+});
 app.use("/api/v1", routes);
 
 // app.use("/bookings", bookingRoutes.router);
