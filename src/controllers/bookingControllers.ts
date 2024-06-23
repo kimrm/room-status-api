@@ -8,7 +8,7 @@ async function index(_req: express.Request, res: express.Response) {
     const bookings = await prisma.booking.findMany();
     res.json(bookings);
   } catch (error) {
-    res.status(500).json({ error: "Unable to get bookings" });
+    res.status(500).json({ error: "Unable to get bookings", message: error });
   }
 }
 
@@ -18,16 +18,16 @@ async function show(req: express.Request, res: express.Response) {
 
     const location = await prisma.location.findUnique({
       where: {
-        slug: locationSlug
+        slug: locationSlug,
       },
       include: {
         overviewInfoTexts: true,
         rooms: {
           include: {
-            bookings: true
-          }
-        }
-      }
+            bookings: true,
+          },
+        },
+      },
     });
 
     if (!location) {
