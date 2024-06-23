@@ -50,8 +50,7 @@ async function createAuthClient() {
 }
 
 cron.schedule("* * * * *", async () => {
-  const calendarId =
-    "ssmt.no_333232333334332d333838@resource.calendar.google.com";
+  const calendarId = require(env.TMP_CALENDAR_ID as string);
   const auth = await createAuthClient();
 
   console.log("Syncing rooms events for today");
